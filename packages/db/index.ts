@@ -1,1 +1,1 @@
-export * as tables from "./schema";
+export * as schema from "./schema";
