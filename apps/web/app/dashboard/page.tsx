@@ -19,8 +19,8 @@ export default function Page() {
   return (
     <SidebarProvider>
       {/* <AppSidebar /> */}
-      <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2">
+      <SidebarInset className="max-h-screen">
+        <header className="flex h-14 shrink-0 absolute left-0 right-0 top-0 items-center gap-2 backdrop-blur-sm bg-white/50">
           <div className="flex flex-1 items-center gap-2 px-3">
             {/* <SidebarTrigger /> */}
             {/* <Separator
@@ -41,10 +41,10 @@ export default function Page() {
             <NavActions />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 px-4 py-6">
-          <ToDoList />
 
+        <div className="flex flex-1 flex-col-reverse gap-4 px-4 pb-6 pt-20 overflow-auto">
           <ToDoListSubbar />
+          <ToDoList />
         </div>
       </SidebarInset>
     </SidebarProvider>
