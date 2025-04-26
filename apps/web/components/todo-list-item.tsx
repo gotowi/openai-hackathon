@@ -4,6 +4,7 @@ import {
   useDeleteToDoMutation,
   useUpdateToDoMutation,
 } from "@/app/dashboard/mutations";
+import { AiMissingContext } from "@/components/ai-missing-context";
 import { AiThoughtProcess } from "@/components/ai-thought-process";
 import { Task } from "@/components/todo-list";
 import { useQueryClient } from "@tanstack/react-query";
@@ -43,6 +44,7 @@ export function ToDoListItem({ task }: { task: Task }) {
           className={clsx(
             "outline-0 w-full",
             task.status === "analyzing" &&
+              task.doableByAi === null &&
               "bg-gradient-to-r from-black from-30% via-blue-500 to-70% to-black text-transparent bg-[length:200%] bg-clip-text animate-text-gradient"
           )}
           onInput={(event) => {
@@ -63,7 +65,7 @@ export function ToDoListItem({ task }: { task: Task }) {
           {task.value}
         </div>
 
-        {task.status === "analyzing" && (
+        {task.status === "analyzing" && task.doableByAi === null && (
           <AiThoughtProcess
             labels={[
               "Validating with AI",
@@ -73,6 +75,8 @@ export function ToDoListItem({ task }: { task: Task }) {
             ]}
           />
         )}
+
+        {task.status === "missing_context" && <AiMissingContext task={task} />}
       </div>
     </div>
   );

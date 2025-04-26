@@ -11,8 +11,9 @@ export type Task = {
   value: string;
   status: string;
   completedAt?: string;
-  doableByAi?: boolean;
+  doableByAi: boolean | null;
   createdAt: string;
+  missingContext?: string[];
 };
 
 export function ToDoList() {
@@ -31,7 +32,7 @@ export function ToDoList() {
             ...data.todo,
           };
 
-          return old.map((t) => (t.id === data.task.id ? newTask : t));
+          return old.map((t) => (t.id === data.todo.id ? newTask : t));
         });
       }
     });
