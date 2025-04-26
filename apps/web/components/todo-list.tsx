@@ -4,30 +4,19 @@ import { ToDoListItem } from "@/components/todo-list-item";
 import { useQuery } from "@tanstack/react-query";
 
 export type Task = {
-  id: string;
-  content: string;
-  completed: boolean;
-  isAiValidating?: boolean;
-
+  id: number;
+  value: string;
+  status: string;
+  completedAt: string;
   doableByAi?: boolean;
+  createdAt: string;
 };
 
 export function ToDoList() {
   const query = useQuery({
     queryKey: ["todos"],
     queryFn: () => {
-      return new Promise<Task[]>((resolve) => {
-        setTimeout(() => {
-          resolve([
-            {
-              id: "1",
-              content: "Write a follow-up email to Emily",
-              completed: false,
-              doableByAi: true,
-            },
-          ]);
-        }, 0);
-      });
+      return fetch("/api/todos").then((res) => res.json()) as Promise<Task[]>;
     },
   });
 
