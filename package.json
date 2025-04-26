@@ -1,0 +1,27 @@
+{
+  "name": "openai-hackathon",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/gotowi/openai-hackathon#readme",
+  "bugs": {
+    "url": "https://github.com/gotowi/openai-hackathon/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gotowi/openai-hackathon.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.2"
+  },
+  "workspaces": [
+    "packages/*",
+    "workers/*"
+  ]
+}
