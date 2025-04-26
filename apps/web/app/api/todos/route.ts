@@ -14,8 +14,8 @@ export async function POST(req: Request) {
   const body = await req.json();
   const [todo] = await db.insert(schema.todos).values(body).returning();
 
-  after(async () => {
-    const response = await fetch("https://konrad.tunel.host/", {
+  after(
+    fetch("https://konrad.tunel.host/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,10 +24,8 @@ export async function POST(req: Request) {
         id: todo.id,
         value: todo.value,
       }),
-    });
-
-    console.log(await response.json());
-  });
+    })
+  );
 
   return NextResponse.json(todo);
 }
