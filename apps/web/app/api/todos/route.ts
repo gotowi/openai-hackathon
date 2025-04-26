@@ -3,7 +3,10 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const todos = await db.query.todos.findMany();
+  const todos = await db.query.todos.findMany({
+    orderBy: (todos) => [todos.createdAt],
+  });
+
   return NextResponse.json(todos);
 }
 
@@ -17,9 +20,8 @@ export async function PATCH(req: Request) {
   const body = await req.json();
   const todo = await db
     .update(schema.todos)
-    .set(body)
-    .where(eq(schema.todos.id, body.id))
-    .returning();
+    .set({ value: body.value })
+    .where(eq(schema.todos.id, body.id));
   return NextResponse.json(todo);
 }
 

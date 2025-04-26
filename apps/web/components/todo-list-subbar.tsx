@@ -5,13 +5,14 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { motion } from "motion/react";
+import { useCreateToDoMutation } from "@/app/dashboard/mutations";
 
 export function ToDoListSubbar() {
   const queryClient = useQueryClient();
   const [value, setValue] = useState("");
   const sidebar = useSidebar();
 
-  // if (sidebar.open) return null;
+  const createToDoMutation = useCreateToDoMutation();
 
   return (
     <motion.div
@@ -42,51 +43,38 @@ export function ToDoListSubbar() {
               if (event.key === "Enter") {
                 event.preventDefault();
 
-                queryClient.setQueryData(["todos"], (old: Task[]) => {
-                  const newTask = {
-                    id: String(Date.now()),
-                    ...(value.trim() === ""
-                      ? {
-                          content: [
-                            "Write a follow-up email to Emily",
-                            "Pay yearly taxes",
-                            "Book a flight to New York",
-                            "Get a haircut",
-                            "Buy groceries",
-                            "Go to the gym",
-                            "Read a book",
-                            "Finish the project report",
-                            "Call mom",
-                            "Plan a weekend trip",
-                            "Organize the closet",
-                            "Clean the house",
-                            "Prepare for the presentation",
-                            "Schedule a dentist appointment",
-                            "Take the dog for a walk",
-                            "Watch a movie",
-                            "Learn a new recipe",
-                            "Practice coding",
-                            "Attend a workshop",
-                            "Visit a museum",
-                            "Go for a run",
-                            "Try a new restaurant",
-                            "Join a yoga class",
-                            "Start a new hobby",
-                            "Volunteer for a local charity",
-                            "Attend a concert",
-                            "Go to a farmer's market",
-                            "Explore a new neighborhood",
-                          ][Math.floor(Math.random() * 10)],
-                        }
-                      : {
-                          content: value,
-                        }),
-                    completed: false,
-                    isAiValidating: true,
-                  };
+                const newTask = {
+                  ...(value.trim() === ""
+                    ? {
+                        value: [
+                          "Write a follow-up email to Emily",
+                          "Pay yearly taxes",
+                          "Book a flight to New York",
+                          "Get a haircut",
+                          "Buy groceries",
+                          "Go to the gym",
+                          "Read a book",
+                          "Finish the project report",
+                          "Call mom",
+                          "Plan a weekend trip",
+                          "Organize the closet",
+                          "Clean the house",
+                          "Prepare for the presentation",
+                          "Schedule a dentist appointment",
+                          "Take the dog for a walk",
+                          "Watch a movie",
+                          "Learn a new recipe",
+                          "Practice coding",
+                          "Attend a workshop",
+                          "Visit a museum",
+                        ][Math.floor(Math.random() * 10)],
+                      }
+                    : {
+                        value: value,
+                      }),
+                };
 
-                  return [...old, newTask];
-                });
+                createToDoMutation.mutate(newTask);
 
                 setValue("");
               }
