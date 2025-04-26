@@ -88,3 +88,41 @@ export function useUpdateToDoMutation() {
     },
   });
 }
+
+export function useDeleteToDoMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const res = await fetch("/api/todos", {
+        method: "DELETE",
+        body: JSON.stringify({ id }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      return res.json();
+    },
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["todos"] });
+      const previousTodos = queryClient.getQueryData(["todos"]);
+
+      queryClient.setQueryData(["todos"], (old: Task[]) => {
+        return old.filter((item) => item.id !== id);
+      });
+
+      return { previousTodos };
+    },
+    onError: (error, data, context) => {
+      queryClient.setQueryData(["todos"], context?.previousTodos as Task[]);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["todos"]);
+    },
+  });
+}
