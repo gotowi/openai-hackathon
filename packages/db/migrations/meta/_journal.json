@@ -36,6 +36,13 @@
       "when": 1745664372364,
       "tag": "0004_nasty_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1745673531535,
+      "tag": "0005_real_magneto",
+      "breakpoints": true
     }
   ]
 }

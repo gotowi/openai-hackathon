@@ -18,6 +18,7 @@ export const schema = {
     // .$type<"new" | "analyzed" | "prepared" | "executed" | "failed">(),
     // completedAt: timestamp("completed_at"),
     missingContext: text().array(),
+    result: text(),
     completedAt: timestamp("completed_at"),
     doableByAi: boolean("doable_by_ai"),
     createdAt: timestamp("created_at").defaultNow(),

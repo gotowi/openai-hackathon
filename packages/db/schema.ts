@@ -11,6 +11,7 @@ export const todos = pgTable("todos", {
   value: text().notNull(),
   status: text().notNull().default("new"),
   missingContext: text().array(),
+  result: text(),
   completedAt: timestamp("completed_at"),
   doableByAi: boolean("doable_by_ai"),
   createdAt: timestamp("created_at").defaultNow(),
