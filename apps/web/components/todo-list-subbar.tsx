@@ -15,17 +15,17 @@ export function ToDoListSubbar() {
   const createToDoMutation = useCreateToDoMutation();
 
   return (
-    <motion.div
-      className="flex fixed justify-center bottom-6 w-3xl left-1/2 -translate-x-1/2 bg-background focus-within:outline-2 outline-cyan-500/30 rounded-full z-[100]"
-      animate={
-        sidebar.open
-          ? {
-              right: "-14rem",
-              left: "unset",
-              width: "32rem",
-            }
-          : {}
-      }
+    <div
+      className="flex sticky justify-center bottom-6 w-3xl mx-auto bg-background focus-within:outline-2 outline-cyan-500/30 rounded-full z-[100]"
+      // animate={
+      //   sidebar.open
+      //     ? {
+      //         right: "-14rem",
+      //         left: "unset",
+      //         width: "32rem",
+      //       }
+      //     : {}
+      // }
     >
       <div className="items-center bg-gradient-to-br from-cyan-500 to-blue-500 p-1 w-full rounded-full">
         <div className="items-center gap-2 px-4 py-2 bg-white/95 rounded-full">
@@ -82,6 +82,6 @@ export function ToDoListSubbar() {
           />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

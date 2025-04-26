@@ -14,6 +14,7 @@ export type Task = {
   doableByAi: boolean | null;
   createdAt: string;
   missingContext?: string[];
+  result?: string;
 };
 
 export function ToDoList() {
@@ -43,7 +44,7 @@ export function ToDoList() {
   }, []);
 
   return (
-    <div className="flex flex-1 w-3xl mx-auto flex-col gap-4 px-4 pb-20">
+    <div className="flex flex-1 w-3xl mx-auto flex-col gap-4 px-4 pb-10">
       {query.data?.map((task) => (
         <ToDoListItem task={task} key={task.id} />
       ))}

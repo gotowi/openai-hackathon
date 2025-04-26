@@ -5,10 +5,12 @@ import {
   useUpdateToDoMutation,
 } from "@/app/dashboard/mutations";
 import { AiMissingContext } from "@/components/ai-missing-context";
+import { AiTaskDone } from "@/components/ai-task-done";
 import { AiThoughtProcess } from "@/components/ai-thought-process";
 import { Task } from "@/components/todo-list";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
+import { Check } from "lucide-react";
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -20,7 +22,7 @@ export function ToDoListItem({ task }: { task: Task }) {
 
   const debouncedUpdateToDoMutate = useDebouncedCallback(
     updateToDoMutation.mutate,
-    5000
+    2000
   );
 
   return (
@@ -34,7 +36,16 @@ export function ToDoListItem({ task }: { task: Task }) {
             : "bg-gray-400"
         )}
       >
-        <div className="w-4 h-4 rounded-full bg-white"></div>
+        <div
+          className={clsx(
+            "w-4 h-4 rounded-full flex items-center justify-center",
+            task.status === "done"
+              ? "bg-gradient-to-br from-cyan-500 to-blue-500"
+              : "bg-white"
+          )}
+        >
+          <Check strokeWidth={4} className="w-3 h-3 text-white" />
+        </div>
       </div>
 
       <div className="flex flex-col grow gap-2 items-start">
@@ -44,7 +55,6 @@ export function ToDoListItem({ task }: { task: Task }) {
           className={clsx(
             "outline-0 w-full",
             task.status === "analyzing" &&
-              task.doableByAi === null &&
               "bg-gradient-to-r from-black from-30% via-blue-500 to-70% to-black text-transparent bg-[length:200%] bg-clip-text animate-text-gradient"
           )}
           onInput={(event) => {
@@ -65,18 +75,31 @@ export function ToDoListItem({ task }: { task: Task }) {
           {task.value}
         </div>
 
-        {task.status === "analyzing" && task.doableByAi === null && (
+        {task.status === "preparing" && (
           <AiThoughtProcess
             labels={[
-              "Validating with AI",
-              "Checking if it's doable",
-              "AI is on it!",
-              "AI is thinking...",
+              "AI is preparing",
+              "AI is getting ready",
+              "AI is thinking",
+              "AI is analyzing",
             ]}
           />
         )}
 
+        {task.status === "executing" && (
+          <AiThoughtProcess
+            labels={[
+              "AI is executing",
+              "AI is working on it",
+              "AI is doing the task",
+              "AI is on it!",
+            ]}
+            executing
+          />
+        )}
+
         {task.status === "missing_context" && <AiMissingContext task={task} />}
+        {task.status === "done" && <AiTaskDone task={task} />}
       </div>
     </div>
   );
