@@ -26,8 +26,8 @@ The system is built as a distributed application with three main components:
 - See `workers/server/README.md` for setup instructions
 
 ## Technology Stack
-- **Frontend**: Next.js
-- **Backend**: Python
+- **Frontend**: Next.js, Shadcn UI, Tailwind CSS
+- **Backend**: Python, FastAPI, Pydantic, Hono
 - **AI Integration**: OpenAI Responses API and OpenAI Agents SDK
 
 ## Getting Started
