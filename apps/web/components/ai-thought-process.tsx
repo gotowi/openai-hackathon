@@ -3,7 +3,13 @@ import clsx from "clsx";
 import { LoaderPinwheel } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export function AiThoughtProcess({ labels }: { labels: string[] }) {
+export function AiThoughtProcess({
+  labels,
+  executing,
+}: {
+  labels: string[];
+  execeting?: boolean;
+}) {
   const [active, setActive] = useState(0);
   const sidebar = useSidebar();
 
@@ -18,7 +24,7 @@ export function AiThoughtProcess({ labels }: { labels: string[] }) {
       <div
         className={clsx(
           "flex flex-wrap gap-1.5 py-0.5 items-center rounded-full",
-          "text-gray-400"
+          executing ? "text-blue-400" : "text-gray-400"
         )}
       >
         <LoaderPinwheel className={clsx("w-4 h-4", "animate-spin")} />
