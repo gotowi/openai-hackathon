@@ -1,0 +1,1 @@
+ALTER TABLE "todos" ADD COLUMN "doable_by_ai" boolean DEFAULT false;

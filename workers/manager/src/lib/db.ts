@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/neon-http";
 import {
   boolean,
@@ -15,10 +16,12 @@ export const schema = {
     value: text().notNull(),
     status: text().notNull().default("new"),
     // .$type<"new" | "analyzed" | "prepared" | "executed" | "failed">(),
+    // completedAt: timestamp("completed_at"),
+    missingContext: text().array(),
     completedAt: timestamp("completed_at"),
     doableByAi: boolean("doable_by_ai"),
     createdAt: timestamp("created_at").defaultNow(),
   }),
 };
 
-export const db = drizzle(process.env.DATABASE_URL as string, { schema });
+export const db = drizzle(env.DATABASE_URL, { schema });

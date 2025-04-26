@@ -1,38 +1,29 @@
 import { Hono } from "hono";
-import { env } from "cloudflare:workers";
+import { eq } from "drizzle-orm";
+import { db, schema } from "./lib/db";
 
 const app = new Hono<{ Bindings: Env }>();
 
-import { drizzle } from "drizzle-orm/neon-http";
-import { schema } from "@openai-hackathon/db";
-import { eq } from "drizzle-orm";
+app.patch("/update/:todoId", async (c) => {
+  const todoId = c.req.param("todoId");
+  const body = await c.req.json();
 
-const db = drizzle(env.DATABASE_URL, { schema });
-
-app.get("/update-todo", async (c) => {
-  const todoId = c.req.query("todoId");
-  const status = c.req.query("status") as
-    | "new"
-    | "analyzed"
-    | "prepared"
-    | "executed"
-    | "failed";
-
-  if (!todoId || !status) {
-    return c.json({ error: "todoId and status are required" }, 400);
+  if (!todoId) {
+    return c.json({ error: "todoId is required" }, 400);
   }
 
-  const result = await db
+  const [todo] = await db
     .update(schema.todos)
-    .set({ status })
-    .where(eq(schema.todos.id, +todoId));
+    .set(body)
+    .where(eq(schema.todos.id, +todoId))
+    .returning();
 
   let id = c.env.WEBSOCKET_SERVER.idFromName("test");
   let stub = c.env.WEBSOCKET_SERVER.get(id);
 
-  await stub.broadcast({ todoId, status });
+  await stub.broadcast({ type: "update", todo });
 
-  return c.json(result);
+  return c.json(todo);
 });
 
 app.get("/websocket", async (c) => {
