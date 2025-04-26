@@ -1,6 +1,6 @@
 import { db, schema } from "@/lib/db";
 import { eq } from "drizzle-orm";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 export async function GET() {
   const todos = await db.query.todos.findMany({
@@ -12,16 +12,47 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const todo = await db.insert(schema.todos).values(body).returning();
+  const [todo] = await db.insert(schema.todos).values(body).returning();
+
+  after(async () => {
+    const response = await fetch("https://konrad.tunel.host/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: todo.id,
+        value: todo.value,
+      }),
+    });
+
+    console.log(await response.json());
+  });
+
   return NextResponse.json(todo);
 }
 
 export async function PATCH(req: Request) {
   const body = await req.json();
-  const todo = await db
+  const [todo] = await db
     .update(schema.todos)
     .set({ value: body.value })
-    .where(eq(schema.todos.id, body.id));
+    .where(eq(schema.todos.id, body.id))
+    .returning();
+
+  after(async () => {
+    fetch("https://konrad.tunel.host/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: todo.id,
+        value: todo.value,
+      }),
+    });
+  });
+
   return NextResponse.json(todo);
 }
 
