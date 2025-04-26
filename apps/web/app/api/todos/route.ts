@@ -38,7 +38,7 @@ export async function PATCH(req: Request) {
     .where(eq(schema.todos.id, body.id))
     .returning();
 
-  after(async () => {
+  after(
     fetch("https://konrad.tunel.host/", {
       method: "POST",
       headers: {
@@ -48,8 +48,8 @@ export async function PATCH(req: Request) {
         id: todo.id,
         value: todo.value,
       }),
-    });
-  });
+    })
+  );
 
   return NextResponse.json(todo);
 }
