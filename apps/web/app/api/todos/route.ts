@@ -9,7 +9,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const todo = await db.insert(schema.todos).values(body);
+  const todo = await db.insert(schema.todos).values(body).returning();
   return NextResponse.json(todo);
 }
 
@@ -18,7 +18,8 @@ export async function PATCH(req: Request) {
   const todo = await db
     .update(schema.todos)
     .set(body)
-    .where(eq(schema.todos.id, body.id));
+    .where(eq(schema.todos.id, body.id))
+    .returning();
   return NextResponse.json(todo);
 }
 
@@ -26,6 +27,7 @@ export async function DELETE(req: Request) {
   const body = await req.json();
   const todo = await db
     .delete(schema.todos)
-    .where(eq(schema.todos.id, body.id));
+    .where(eq(schema.todos.id, body.id))
+    .returning();
   return NextResponse.json(todo);
 }
