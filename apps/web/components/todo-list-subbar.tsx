@@ -1,12 +1,16 @@
 "use client";
 
 import { Task } from "@/components/todo-list";
+import { useSidebar } from "@/components/ui/sidebar";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 export function ToDoListSubbar() {
   const queryClient = useQueryClient();
   const [value, setValue] = useState("");
+  const sidebar = useSidebar();
+
+  // if (sidebar.open) return null;
 
   return (
     <div className="flex sticky justify-center bottom-6 w-3xl mx-auto bg-background focus-within:outline-2 outline-cyan-500/30 rounded-full">
@@ -38,6 +42,24 @@ export function ToDoListSubbar() {
                             "Finish the project report",
                             "Call mom",
                             "Plan a weekend trip",
+                            "Organize the closet",
+                            "Clean the house",
+                            "Prepare for the presentation",
+                            "Schedule a dentist appointment",
+                            "Take the dog for a walk",
+                            "Watch a movie",
+                            "Learn a new recipe",
+                            "Practice coding",
+                            "Attend a workshop",
+                            "Visit a museum",
+                            "Go for a run",
+                            "Try a new restaurant",
+                            "Join a yoga class",
+                            "Start a new hobby",
+                            "Volunteer for a local charity",
+                            "Attend a concert",
+                            "Go to a farmer's market",
+                            "Explore a new neighborhood",
                           ][Math.floor(Math.random() * 10)],
                         }
                       : {

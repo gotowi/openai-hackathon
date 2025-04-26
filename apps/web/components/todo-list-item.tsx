@@ -1,5 +1,6 @@
 "use client";
 
+import { AiThoughtProcess } from "@/components/ai-thought-process";
 import { Task } from "@/components/todo-list";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
@@ -52,9 +53,14 @@ export function ToDoListItem({ task }: { task: Task }) {
         </div>
 
         {task.doableByAi && (
-          <button className="text-sm font-semibold text-white cursor-pointer rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 px-2 py-0.5 bg-white/50 hover:bg-white/80 transition-all animate-fade-in">
-            Do it
-          </button>
+          <AiThoughtProcess
+            labels={[
+              "Validating with AI",
+              "Checking if it's doable",
+              "AI is on it!",
+              "AI is thinking...",
+            ]}
+          />
         )}
       </div>
     </div>
