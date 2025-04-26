@@ -132,6 +132,8 @@ async def act(payload: Payload):
         todo_value,
     )
 
+    executor_output = executor_output.final_output_as(ExecutorOutput)
+
     update(todo_id, {
         "status": "done",
         "result": executor_output.result,
