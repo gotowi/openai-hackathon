@@ -12,6 +12,10 @@ app.patch("/update/:todoId", async (c) => {
     return c.json({ error: "todoId is required" }, 400);
   }
 
+  if (body.status === "done") {
+    body.completedAt = new Date();
+  }
+
   const [todo] = await db
     .update(schema.todos)
     .set(body)

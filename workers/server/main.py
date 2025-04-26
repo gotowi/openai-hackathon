@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from typing import Optional
 from agents import Agent, ItemHelpers, Runner, trace, WebSearchTool, function_tool
 import requests
+from datetime import datetime
 
 class PreparerOutput(BaseModel):
     ready_to_execute: bool    
@@ -132,12 +133,9 @@ async def act(payload: Payload):
         todo_value,
     )
 
-    executor_output = executor_output.final_output_as(ExecutorOutput)
-
     update(todo_id, {
         "status": "done",
-        "result": executor_output.result,
-        "completedAt": datetime.now().isoformat(),
+        "result": executor_output.final_output,
     })
 
     return {"result": "Todo is ready to be executed"}
