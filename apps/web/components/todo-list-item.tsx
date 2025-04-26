@@ -1,6 +1,9 @@
 "use client";
 
-import { useUpdateToDoMutation } from "@/app/dashboard/mutations";
+import {
+  useDeleteToDoMutation,
+  useUpdateToDoMutation,
+} from "@/app/dashboard/mutations";
 import { AiThoughtProcess } from "@/components/ai-thought-process";
 import { Task } from "@/components/todo-list";
 import { useQueryClient } from "@tanstack/react-query";
@@ -12,27 +15,12 @@ export function ToDoListItem({ task }: { task: Task }) {
   const queryClient = useQueryClient();
 
   const updateToDoMutation = useUpdateToDoMutation();
+  const deleteToDoMutation = useDeleteToDoMutation();
 
   const debouncedUpdateToDoMutate = useDebouncedCallback(
     updateToDoMutation.mutate,
     5000
   );
-
-  useEffect(() => {
-    if (task.status === "new") {
-      setTimeout(() => {
-        queryClient.setQueryData(["todos"], (old: Task[]) => {
-          const newTask = {
-            ...task,
-            status: "analyzed",
-            doableByAi: Math.random() > 0.5,
-          };
-
-          return old.map((t) => (t.id === task.id ? newTask : t));
-        });
-      }, 3000);
-    }
-  }, [task]);
 
   return (
     <div className="flex gap-2">
@@ -54,14 +42,19 @@ export function ToDoListItem({ task }: { task: Task }) {
           suppressContentEditableWarning
           className={clsx(
             "outline-0 w-full",
-            task.status === "new" &&
+            task.status === "analyzing" &&
               "bg-gradient-to-r from-black from-30% via-blue-500 to-70% to-black text-transparent bg-[length:200%] bg-clip-text animate-text-gradient"
           )}
           onInput={(event) => {
-            debouncedUpdateToDoMutate({
-              id: task.id,
-              value: (event.target as HTMLDivElement).innerText,
-            });
+            if ((event.target as HTMLDivElement).textContent?.length === 0) {
+              deleteToDoMutation.mutate(task.id);
+              debouncedUpdateToDoMutate.cancel();
+            } else {
+              debouncedUpdateToDoMutate({
+                id: task.id,
+                value: (event.target as HTMLDivElement).innerText,
+              });
+            }
           }}
           onBlur={() => {
             debouncedUpdateToDoMutate.flush();
@@ -70,7 +63,7 @@ export function ToDoListItem({ task }: { task: Task }) {
           {task.value}
         </div>
 
-        {task.doableByAi && (
+        {task.status === "analyzing" && (
           <AiThoughtProcess
             labels={[
               "Validating with AI",
