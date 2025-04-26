@@ -4,6 +4,7 @@ import { Task } from "@/components/todo-list";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { motion } from "motion/react";
 
 export function ToDoListSubbar() {
   const queryClient = useQueryClient();
@@ -13,7 +14,18 @@ export function ToDoListSubbar() {
   // if (sidebar.open) return null;
 
   return (
-    <div className="flex sticky justify-center bottom-6 w-3xl mx-auto bg-background focus-within:outline-2 outline-cyan-500/30 rounded-full">
+    <motion.div
+      className="flex fixed justify-center bottom-6 w-3xl left-1/2 -translate-x-1/2 bg-background focus-within:outline-2 outline-cyan-500/30 rounded-full z-[100]"
+      animate={
+        sidebar.open
+          ? {
+              right: "-14rem",
+              left: "unset",
+              width: "32rem",
+            }
+          : {}
+      }
+    >
       <div className="items-center bg-gradient-to-br from-cyan-500 to-blue-500 p-1 w-full rounded-full">
         <div className="items-center gap-2 px-4 py-2 bg-white/95 rounded-full">
           <input
@@ -21,7 +33,11 @@ export function ToDoListSubbar() {
             autoFocus
             onChange={(event) => setValue(event.target.value)}
             className="w-full h-full outline-0"
-            placeholder="Your next task goes here.."
+            placeholder={
+              sidebar.open
+                ? "Ask about this task..."
+                : "Your next task goes here.."
+            }
             onKeyDown={(event) => {
               if (event.key === "Enter") {
                 event.preventDefault();
@@ -78,6 +94,6 @@ export function ToDoListSubbar() {
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
