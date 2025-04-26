@@ -99,6 +99,7 @@ async def act(payload: Payload):
     analyzer_output = analyzer_output.final_output_as(AnalyzerOutput)
 
     update(todo_id, {
+        "status": "analyzed",
         "doableByAi": analyzer_output.is_doable,
     })
 
@@ -115,7 +116,6 @@ async def act(payload: Payload):
     )
 
     preparer_output = preparer_output.final_output_as(PreparerOutput)
-
 
     if not preparer_output.ready_to_execute:
         update(todo_id, {
